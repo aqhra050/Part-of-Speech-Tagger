@@ -18,7 +18,6 @@ def main():
     #dictionary will contain a dictionary entry for POS X and said entry will contain details key-value pairs of each POS Y that is subsequent to POS Y and the count of Y will be noted
     absoluteTransition = {}
     with open(TRAINING_FILE, "r") as trainingFile:
-        count = 0
         #will be used to track the ending of sentences (and implicitly the beginning of sentences)
         sentenceEnd   = False
         previousTag   = "Begin_Sent"
@@ -46,10 +45,6 @@ def main():
                 sentenceEnd = False
             else:
                 previousTag = presentTag
-
-            count += 1
-            if count > 30:
-                break
     
     #Having generated frequency tables, we now need to generate probability tables
 
