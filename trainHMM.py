@@ -2,7 +2,14 @@
 #We begin by opening the appropiate file
 
 import re
-import nltk
+
+def probabilityGenerate(absoluteTable):
+    probabilityTable = {}
+    for outerPOS, outerPOS_Dict in absoluteTable.items():
+        #getting the total whereby each element 
+        outerPOS_total = sum(outerPOS_Dict.values())
+        probabilityTable[outerPOS] = {k:v/outerPOS_total for (k, v) in outerPOS_Dict.items()}
+    return probabilityTable
 
 def main():
     TRAINING_FILE = "WSJ_24.pos"
@@ -44,6 +51,13 @@ def main():
             if count > 30:
                 break
     
+    #Having generated frequency tables, we now need to generate probability tables
+
+    likelihood = probabilityGenerate(absoluteLikelihood)
+    #adding a manual entry for the likelihood of the "Begin_Sent" tag
+    likelihood["Begin_Sent"] = {"Begin_Sent": 1}
+    transitions = probabilityGenerate(absoluteTransition)
+
     # #Displaying the absoluteLikelihood
     # for POS, WordDict in absoluteLikelihood.items():
     #     print(POS)
@@ -52,11 +66,26 @@ def main():
     #     print()
 
     #Displaying the absoluteTransition
-    for POS, WordDict in absoluteTransition.items():
-        print(POS)
+    # for POS, WordDict in absoluteTransition.items():
+    #     print(POS)
+    #     for word, count in WordDict.items():
+    #         print(f"\t{word:<15} | {count}", end=" + ")
+    #     print()
+
+    #Displaying the likelihood
+    for POS, WordDict in likelihood.items():
+        print(f"{POS}")
         for word, count in WordDict.items():
-            print(f"\t{word:<15} | {count}", end=" + ")
+            print(f"\t{word:<15} | {count:.5f}")
         print()
+
+    # #Displaying the transitions
+    # for POS, WordDict in transitions.items():
+    #     print(f"{POS}")
+    #     for word, count in WordDict.items():
+    #         print(f"\t{word:<8} | {count:.5f}")
+    #     print()
+
 
 
 if __name__ == "__main__":
